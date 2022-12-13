@@ -3,7 +3,7 @@ import numpy as np
 
 
 def main():
-    a = solver.Solver(11, 11, 11, int(1 / 0.001) + 1)
+    a = solver.Solver(11, 11, 11, 1000)
     our = a.solve()
     anal = a.get_analytic_solve()
     # print(a.u_actual.shape)

@@ -6,10 +6,10 @@ Solver::Solver(int N, int M, int K, int T) {
     this->m = M;
     this->kk = K;
     this->t = T;
-    this->hx = 1 / (n - 1);
-    this->hy = 1 / (m - 1);
-    this->hz = 1 / (kk - 1);
-    this->dt = 1 / T;
+    this->hx = 1. / (n - 1) * 1.0;
+    this->hy = 1. / (m - 1) * 1.0;
+    this->hz = 1. / (kk - 1) * 1.0;
+    this->dt = 1. / T * 1.0;
 
     for (int i = 0; i < this->n; ++i) {
         for (int j = 0; j < this->m; ++j) {
@@ -37,13 +37,14 @@ bool Solver::check_boundary(int I, int J, int K) {
 void Solver::check_t() {
     std::cout << "dt = " << this->dt << " < " << 0.5 /
                                                  (this->D[0] / (pow(this->hx, 2)) + this->D[1] / (pow(this->hy, 2)) +
-                                                  this->D[2] / (pow(this->hz, 2)));
-    char answer;
+                                                  this->D[2] / (pow(this->hz, 2))) << std::endl;
+    std::string answer;
     std::cout << "Do you want to continue: (y/n):";
     std::cin >> answer;
-    if (reinterpret_cast<const char *>(answer) == "y") {
-        this->dt = 1 / this->t;
-    } else if (reinterpret_cast<const char *>(answer) == "n") {
+
+    if (answer == "y") {
+
+    } else if (answer == "n") {
         std::cout << "enter new t:";
         std::cin >> this->t;
         this->dt = 1 / this->t;
@@ -57,7 +58,9 @@ void Solver::check_t() {
 std::vector<double> *Solver::solve() {
     this->check_t();
     for (int i = 1; i <= this->t; i++) {
-        this->calculate_next_u();
+//        print();
+//        std::cout<<i<<std::endl;
+        calculate_next_u();
     }
     return this->u_actual;
 }
@@ -98,7 +101,7 @@ void Solver::fill_boundaries() {
 }
 
 
-double Solver::get_analytic_u(int i, int j, int k) {
+double Solver::get_analytic_u(int i, int j, int k) const {
     double x = i * this->hx;
     double y = j * this->hy;
     double z = k * this->hz;
@@ -115,7 +118,7 @@ void Solver::set_value_next(int i, int j, int k, const double &value) {
     this->u_next->at(i * this->n * this->m + j * this->kk + k) = value;
 }
 
-const double Solver::get_u(int i, int j, int k) {
+double Solver::get_u(int i, int j, int k) const {
     return this->u_actual->at(i * this->n * this->m + j * this->kk + k);
 }
 
@@ -150,14 +153,20 @@ void Solver::swap() {
 
 void Solver::get_next_u() {
     fill_boundaries();
+    double u;
     for (int i = 1; i < this->n - 1; ++i) {
         for (int j = 1; j < this->m - 1; ++j) {
             for (int k = 1; k < this->kk - 1; ++k) {
-                double u = get_u(i, j, k) +
-                           this->dt * (f(i, j, k)
-                                       + D[0] * this->Lx(i, j, k)
-                                       + D[1] * this->Ly(i, j, k)
-                                       + D[2] * this->Lz(i, j, k));
+                u = get_u(i, j, k) +
+                    this->dt * (f(i, j, k)
+                          + D[0] * Lx(i, j, k)
+                          + D[1] * Ly(i, j, k)
+                          + D[2] * Lz(i, j, k));
+//                std::cout << "dt: " << this->dt << " get_u: " << get_u(i, j, k) << " " << " f(i, j, k): " << f(i, j, k) <<
+//                          " D[0] * Lx(i, j, k): " << +D[0] * Lx(i, j, k) << " D[1] * Ly(i, j, k): "
+//                          << D[1] * Ly(i, j, k)
+//                          << " D[2] * Lz(i, j, k): " << D[2] * Lz(i, j, k) << " u: "
+//                          << u << std::endl;
                 set_value_next(i, j, k, u);
             }
         }
@@ -174,12 +183,17 @@ double Solver::mistake() const {
     for (int i = 1; i < this->n - 1; ++i) {
         for (int j = 1; j < this->m - 1; ++j) {
             for (int k = 1; k < this->kk - 1; ++k) {
-                if (std::abs(get_u(i, j, k) - get_analytic_u(i, j, k)) > mist) {
-                    mist = std::abs(get_u(i, j, k) - get_analytic_u(i, j, k)) > mist;
+//                std::cout<<std::abs(this->get_u(i, j, k) - this->get_analytic_u(i, j, k))<< std::endl;
+                if (std::abs(this->get_u(i, j, k) - this->get_analytic_u(i, j, k)) > mist) {
+    a.print()
+                    mist = std::abs(get_u(i, j, k) - get_analytic_u(i, j, k));
                 }
             }
         }
     }
     return mist;
+}
 
+void Solver::print() {
+    std::cout << get_u(5, 5, 5);
 }

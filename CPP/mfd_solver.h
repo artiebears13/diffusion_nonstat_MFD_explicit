@@ -15,7 +15,7 @@ public:
 
     void set_value(int i, int j, int k, const double &value);
 
-    const double get_u(int i, int j, int k);
+    double get_u(int i, int j, int k) const;
 
 
     inline double Lx(int i, int j, int k);
@@ -49,4 +49,8 @@ public:
     void set_value_next(int i, int j, int k, const double &value);
 
     double mistake() const;
+
+    double get_analytic_u(int i, int j, int k) const;
+
+    void print();
 };

@@ -9,7 +9,7 @@ int main() {
 //    std::cout << a(1, 1, 1) << " "<< a(0,0,0);
     a.solve();
     float mist = a.mistake();
-    std::cout << mist << std::endl;
+    std::cout << "mist: " << mist << std::endl;
 
     return 0;
 }
