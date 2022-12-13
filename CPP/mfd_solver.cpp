@@ -185,7 +185,6 @@ double Solver::mistake() const {
             for (int k = 1; k < this->kk - 1; ++k) {
 //                std::cout<<std::abs(this->get_u(i, j, k) - this->get_analytic_u(i, j, k))<< std::endl;
                 if (std::abs(this->get_u(i, j, k) - this->get_analytic_u(i, j, k)) > mist) {
-    a.print()
                     mist = std::abs(get_u(i, j, k) - get_analytic_u(i, j, k));
                 }
             }
@@ -194,6 +193,4 @@ double Solver::mistake() const {
     return mist;
 }
 
-void Solver::print() {
-    std::cout << get_u(5, 5, 5);
-}
+
