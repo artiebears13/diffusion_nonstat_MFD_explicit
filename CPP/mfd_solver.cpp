@@ -1,3 +1,6 @@
-//
-// Created by artem on 12/13/22.
-//
+#include "mfd_solver.h"
+
+
+Solver::Solver(int n,int m,int k,int t){
+
+}
