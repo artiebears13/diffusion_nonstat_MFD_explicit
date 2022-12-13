@@ -2,3 +2,9 @@
 __pycache__
 .idea
 .gitignore
+
+
+build
+.idea
+cmake-build-debug
+googletest
