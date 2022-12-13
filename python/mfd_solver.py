@@ -55,13 +55,16 @@ class Solver:
         self.n = n
         self.m = m
         self.k = k
+        self.hx = 1 / (n - 1)
+        self.hy = 1 / (m - 1)
+        self.hz = 1 / (k - 1)
         self.t = t
         self.dt = 1 / t
         self.u_actual = np.zeros((n, m, k))
         self.u_next = np.zeros((n, m, k))
-        self.hx = 1 / (n - 1)
-        self.hy = 1 / (m - 1)
-        self.hz = 1 / (k - 1)
+
+
+
 
     def check_boundary(self, i, j, k):
         if i == 0 or i == self.n \
@@ -71,6 +74,22 @@ class Solver:
         else:
             return False
 
+
+    def check_t(self):
+        print('dt=', self.dt, ' < ',
+              0.5 / (self.D[0] / (self.hx ** 2) + self.D[1] / (self.hy ** 2) + self.D[2] / (self.hz ** 2)))
+        # print()
+        cond = input('Do you want to continue: (y/n): ')
+        print(cond)
+        if cond == 'y':
+            self.dt = 1 / self.t
+        elif cond == 'n':
+            print('enter new t: ')
+            self.t = int(input())
+            self.dt = 1 / self.t
+            self.check_t()
+        else:
+            exit(1)
     def fill_boundaries(self):
         bi = [0, self.n - 1]
         bj = [0, self.m - 1]
@@ -123,6 +142,7 @@ class Solver:
     # solver function
     # call it to get answer
     def solve(self):
+        self.check_t()
         for i in range(1, self.t):
             self.calculate_next_u()
         return self.u_actual
@@ -179,7 +199,7 @@ class Solver:
 
         img = ax.scatter(x, y, z, c=self.get_analytic_solve(), cmap=cm.jet)
         fig.colorbar(img)
-        plt.title('Numeric solution')
+        plt.title('Analytic solution')
         plt.show()
 
 
