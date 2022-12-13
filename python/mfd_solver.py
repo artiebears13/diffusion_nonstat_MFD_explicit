@@ -1,4 +1,12 @@
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import axes3d
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import numpy as np
+import seaborn
 
 '''
 Class Solver: solving equation:
@@ -30,7 +38,7 @@ Let us introduce discrete operators of secondary glass derivatives:
 	Lz_ijk U^n = ( U_ij(k-1)^n - 2·U_ijk^n + U_ij(k+1)^n )/(hz)²
 Also let: 
     f_ijk^n = f(i·hx, j·hy, k·hz, ndt) и g_ijk = g(i·hx, j·hy, k·hz)
-    
+
 And, finally our numerical scheme:
 U_ijk^(n+1) = U_ijk^n + Δt·(f_ijk^n + d_x·Lx_ijk U^n + d_y·Ly_ijk U^n + d_z·Lz_ijk U^n), 
 if 1 ⩽ i ⩽ Nx-2, 1 ⩽ j ⩽ Ny-2, 1 ⩽ k ⩽ Nz-2 (not boundary)
@@ -47,13 +55,16 @@ class Solver:
         self.n = n
         self.m = m
         self.k = k
+        self.hx = 1 / (n - 1)
+        self.hy = 1 / (m - 1)
+        self.hz = 1 / (k - 1)
         self.t = t
         self.dt = 1 / t
         self.u_actual = np.zeros((n, m, k))
         self.u_next = np.zeros((n, m, k))
-        self.hx = 1 / (n - 1)
-        self.hy = 1 / (m - 1)
-        self.hz = 1 / (k - 1)
+
+
+
 
     def check_boundary(self, i, j, k):
         if i == 0 or i == self.n \
@@ -63,6 +74,22 @@ class Solver:
         else:
             return False
 
+
+    def check_t(self):
+        print('dt=', self.dt, ' < ',
+              0.5 / (self.D[0] / (self.hx ** 2) + self.D[1] / (self.hy ** 2) + self.D[2] / (self.hz ** 2)))
+        # print()
+        cond = input('Do you want to continue: (y/n): ')
+        print(cond)
+        if cond == 'y':
+            self.dt = 1 / self.t
+        elif cond == 'n':
+            print('enter new t: ')
+            self.t = int(input())
+            self.dt = 1 / self.t
+            self.check_t()
+        else:
+            exit(1)
     def fill_boundaries(self):
         bi = [0, self.n - 1]
         bj = [0, self.m - 1]
@@ -115,6 +142,7 @@ class Solver:
     # solver function
     # call it to get answer
     def solve(self):
+        self.check_t()
         for i in range(1, self.t):
             self.calculate_next_u()
         return self.u_actual
@@ -136,18 +164,46 @@ class Solver:
                     u[i, j, k] = self.get_analytic_u(i * self.hx, j * self.hy, k * self.hz)
         return u
 
-
-
     def print(self):
         print('n = {}, m = {}, k = {}'.format(self.n, self.m, self.k))
         print('hx = {}, hy = {}, hz = {}'.format(self.hx, self.hy, self.hz))
-        print('U: ')
+        # print('U: ')
         # print(self.u_actual)
-        print('dt=',self.dt,' < ',0.5/(self.D[0]/(self.hx**2)+self.D[1]/(self.hy**2)+self.D[2]/(self.hz**2)))
+        print('dt=', self.dt, ' < ',
+              0.5 / (self.D[0] / (self.hx ** 2) + self.D[1] / (self.hy ** 2) + self.D[2] / (self.hz ** 2)))
+
+    def plot(self):
+        fig = plt.figure(figsize=(20, 20))
+        ax = plt.axes(projection='3d')
+        t = 1
+        xrange = np.arange(0, 1 + self.hx, self.hx)
+        print(xrange.shape)
+        yrange = np.arange(0, 1 + self.hx, self.hy)
+        zrange = np.arange(0, 1 + self.hx, self.hz)
+        x, y, z = np.meshgrid(xrange, yrange, zrange)
+
+        img = ax.scatter(x, y, z, c=self.u_actual, cmap=cm.jet)
+        fig.colorbar(img)
+        plt.title('Numeric solution')
+        plt.show()
+
+    def plot_analytic(self):
+        fig = plt.figure(figsize=(20, 20))
+        ax = plt.axes(projection='3d')
+        t = 1
+        xrange = np.arange(0, 1 + self.hx, self.hx)
+        print(xrange.shape)
+        yrange = np.arange(0, 1 + self.hx, self.hy)
+        zrange = np.arange(0, 1 + self.hx, self.hz)
+        x, y, z = np.meshgrid(xrange, yrange, zrange)
+
+        img = ax.scatter(x, y, z, c=self.get_analytic_solve(), cmap=cm.jet)
+        fig.colorbar(img)
+        plt.title('Analytic solution')
+        plt.show()
 
 
-
-def max_mistake(a,b):
+def max_mistake(a, b):
     mist = 0
     our = a
     anal = b
@@ -156,5 +212,3 @@ def max_mistake(a,b):
             for k in range(len(a)):
                 mist = max(np.abs(our[i, j, k] - anal[i, j, k]), mist)
     return mist
-
-
