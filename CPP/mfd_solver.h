@@ -13,18 +13,40 @@ public:
 
     double const &operator()(int i, int j, int k);
 
-    void set_value(int i, int j, int k, const float &value);
+    void set_value(int i, int j, int k, const double &value);
 
     const double get_u(int i, int j, int k);
 
 
-    double Lx(int i, int j, int k);
+    inline double Lx(int i, int j, int k);
 
-    double Ly(int i, int j, int k);
+    inline double Ly(int i, int j, int k);
 
-    double Lz(int i, int j, int k);
+    inline double Lz(int i, int j, int k);
 
-    double f(int i, int j, int k);
+    inline double f(int i, int j, int k);
 
-    void swap();
+    inline void swap();
+
+    bool check_boundary(int I, int J, int K);
+
+    void check_t();
+
+    void calculate_next_u();
+
+    std::vector<double> * solve();
+
+    void fill_boundary_x();
+
+    void fill_boundary_y();
+
+    void fill_boundary_z();
+
+    void fill_boundaries();
+
+    void get_next_u();
+
+    void set_value_next(int i, int j, int k, const double &value);
+
+    double mistake() const;
 };
