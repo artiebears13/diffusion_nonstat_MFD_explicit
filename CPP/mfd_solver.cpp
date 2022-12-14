@@ -47,7 +47,7 @@ void Solver::check_t() {
     } else if (answer == "n") {
         std::cout << "enter new t:";
         std::cin >> this->t;
-        this->dt = 1 / this->t;
+        this->dt = 1. / this->t;
         this->check_t();
     } else {
         std::cerr << "wrong input" << std::endl;

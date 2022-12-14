@@ -3,7 +3,7 @@
 #include <chrono>
 
 int main() {
-    Solver a(11, 11, 11, 1000);
+    Solver a(41, 41, 41, 1650);
 //    a.set_value(1,1,1,10.);
 //    a.swap();
 //    a.swap();
