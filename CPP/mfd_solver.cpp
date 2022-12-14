@@ -5,11 +5,11 @@ Solver::Solver(int N, int M, int K, int T) {
     this->n = N;
     this->m = M;
     this->kk = K;
-    this->t = T;
+    this->t = 111;
     this->hx = 1. / (n - 1) * 1.0;
     this->hy = 1. / (m - 1) * 1.0;
     this->hz = 1. / (kk - 1) * 1.0;
-    this->dt = 1. / T * 1.0;
+    this->dt = 0.009;
 
     for (int i = 0; i < this->n; ++i) {
         for (int j = 0; j < this->m; ++j) {
@@ -47,7 +47,7 @@ void Solver::check_t() {
     } else if (answer == "n") {
         std::cout << "enter new t:";
         std::cin >> this->t;
-        this->dt = 1 / this->t;
+        this->dt = 1. / this->t;
         this->check_t();
     } else {
         std::cerr << "wrong input" << std::endl;

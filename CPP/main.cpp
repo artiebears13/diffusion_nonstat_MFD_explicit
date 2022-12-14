@@ -3,7 +3,7 @@
 #include <chrono>
 
 int main() {
-    Solver a(11, 11, 11, 1000);
+    Solver a(11, 11, 11, 1650);
 //    a.set_value(1,1,1,10.);
 //    a.swap();
 //    a.swap();
@@ -12,7 +12,8 @@ int main() {
     /* Do your stuff here */
 
     a.solve();
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    auto time = (double) (clock() - tStart) / CLOCKS_PER_SEC;
+    std::cout << "time: " << time;
 
     float mist = a.mistake();
     std::cout << "mist: " << mist << std::endl;
