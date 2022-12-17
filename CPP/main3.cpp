@@ -5,9 +5,9 @@
 #include <omp.h>
 
 
-#define Nx 40
-#define Ny 40
-#define Nz 40
+#define Nx 120
+#define Ny 60
+#define Nz 20
 #define n Nx
 #define m Ny
 #define kk Nz
@@ -101,11 +101,11 @@ int main() {
     for (int l = 1; l * dt <= 1; l++) {
 //        print();
 //        std::cout<<i<<std::endl;
-
-        for (int k = 0; k < kk; ++k) {
+        for (int i = 0; i < n; ++i)
+         {
 //#pragma omp parallel for
             for (int j = 0; j < m; ++j) {
-                for (int i = 0; i < n; ++i) {
+                for (int k = 0; k < kk; ++k){
                     if (i == 0) { set_u(u_next, i, j, k, 0.); }
                     else if (i == n - 1) { set_u(u_next, i, j, k, 0.); }
                     else if (j == 0) { set_u(u_next, i, j, k, 0.); }

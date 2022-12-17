@@ -12,6 +12,10 @@
 #define m Ny
 #define kk Nz
 #define len n * m * kk
+#define kmax n * m * kk - m*n
+#define jmax m * n-n
+#define K kmax+m*n
+#define J jmax+n
 #define hx 1./(n-1)*1.0
 #define hy 1. / (m - 1) * 1.0
 #define hz 1. / (kk - 1) * 1.0
@@ -19,8 +23,6 @@
 #define D1 0.15
 #define D2 0.1
 #define dt 0.9*(0.5 /(D0 / (hx*hx) + D1 / (hy*hy) + D2 / (hz*hz)))
-//#define dt (0.45 /(D0 / (hx*hx) + D1 / (hy*hy) + D2 / (hz*hz)))
-//#define dt 0.001
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 #define f(x, y, z) ((D0+D1+D2)*(M_PI*M_PI*sin(M_PI*x))* sin(M_PI * y) * sin(M_PI * z))
 
@@ -34,26 +36,20 @@ inline void set_u(double *const &u, int i, int j, int k, double const &value) {
 }
 
 
-inline double Lx(double *const &u_actual, int i, int j, int k) {
-//    std::cout<<"1 "<<(i + 1) + j + k<<std::endl;
-    return (*(u_actual + (i - 1) + j + k) - 2 * (*(u_actual + (i) + (j) + k)) +
-            *(u_actual + (i +1) + j + k))
-           / (hx * hx);
-}
-
-inline double Ly(double *const &u_actual, int i, int j, int k) {
-//    std::cout<<"1 "<<(i) + (j + n) + k<<std::endl;
-    return (*(u_actual + (i) + (j - n) + k) - 2 * (*(u_actual + (i) + (j) + k)) +
-    *(u_actual + (i) + (j + n) + k))
-           / (hy * hy);
-}
-
-inline double Lz(double *const &u_actual, int i, int j, int k) {
-//    std::cout<<"1 "<<(i) + (j) + k + n*m<<std::endl;
-    return ((*(u_actual + (i) + (j) + k - n*m)) - 2 * (*(u_actual + (i) + (j) + k)) +
-    (*(u_actual + (i) + (j) + k + n*m)))
-           / ((hz) * (hz));
-}
+//inline double Lx(double * index) {
+////    std::cout<<"1 "<<(i + 1) + j + k<<std::endl;
+//    return
+//}
+//
+//inline double Ly(double * index) {
+////    std::cout<<"1 "<<(i) + (j + n) + k<<std::endl;
+//    return
+//}
+//
+//inline double Lz(double * index) {
+////    std::cout<<"1 "<<(i) + (j) + k + n*m<<std::endl;
+//    return ;
+//}
 
 void swap(double *&u_actual, double *&u_next) {
 
@@ -66,76 +62,49 @@ void swap(double *&u_actual, double *&u_next) {
 
 int main() {
 
-    double u;
+
     double u_act[len];
     double u_n[len];
+    int index;
 
     double *u_actual = &u_act[0];
     double *u_next = &u_n[0];
 
 
-//    double* u_actual=u_act.data();
-//    double *u_next=u_n.data();
-
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
             for (int i = 0; i < n; ++i) {
-
                 set_u(u_actual, i, j, k, 0.);
-
             }
         }
     }
 
-//    std::cout<< get_u(u_actual,5,5,5)<<std::endl;
 
-//    double *u_actual = u_act.();
-//    double *u_next = u_n.data();
-
-
-
-
-//    set_u(u_actual, 1, 0, 0, 10.);
-//    set_u(u_next, 1, 0, 0, 0.);
-//    std::cout << get_u(u_next, 1, 0, 0) << std::endl;
-//    swap(u_actual, u_next);
-//    std::cout << get_u(u_next, 1, 0, 0) << std::endl;
-//    std::cout << get_u(u_actual, 1, 0, 0) << std::endl;
 //-----------------------------------------------------------------------------
     clock_t tStart = clock();
 //   auto t = omp_get_wtime();
     for (int l = 1; l * dt <= 1; l++) {
-//        print();
-//        std::cout << "-------------------------------------------" << std::endl;
 
-        for (int k = 0; k < n * m * kk; k += n * m) {
+        for(int k = 0; k < K; k += n * m){
 //#pragma omp parallel for
-            for (int j = 0; j < m * n; j += n) {
-                for (int i = 0; i < n; ++i) {
+            for(int j = 0; j <J ; j += n){
+                for(int i = 0; i < n; ++i){
+                    index=i+j+k;
+//                     std::cout << i<<" "<<j<<" "<<k<<std::endl;
+//                    double* index = u_next + i + j + k;
+//                    double* index_a = u_actual + i + j + k;
+
 //                    std::cout << " i=" << i << " j=" << j << " k=" << k << std::endl;
-                    if (i == 0) { *(u_next + i + j + k) = 0.; }
-                    else if (i == n - 1) { *(u_next + i + j + k) = 0.; }
-                    else if (j == 0) { *(u_next + i + j + k) = 0.; }
-                    else if (j == m * n - n) { *(u_next + i + j + k) = 0.; }
-
-                    else if (k == 0) { *(u_next + i + j + k) = 0.; }
-                    else if (k == n * m * kk - m*n) { *(u_next + i + j + k) = 0.; }
+                     if (i == 0 or (i == n - 1) or (j == 0) or (j == jmax) or (k == 0) or (k == kmax)){ *(u_next+index) = 0.; }
                     else {
-                        u = *(u_actual + i + j + k) +
-                            dt * (f(i  * hx, j / n * hy, k /n/m* hz)
-                                  + D0 * Lx(u_actual, i, j, k)
-                                  + D1 * Ly(u_actual, i, j, k)
-                                  + D2 * Lz(u_actual, i, j, k));
-//                        std::cout << "dt: " << dt << " get_u: " << get_u(u_actual, i, j, k) << " " << " f(i, j, k): "
-//                                  << f(i * hx, j * hy, k * hz) <<
-//                                  " D0 * Lx(i, j, k): " << D0 * Lx(u_actual, i, j, k) << " D1 * Ly(i, j, k): "
-//                                  << D1 * Ly(u_actual, i, j, k)
-//                                  << " D2 * Lz(i, j, k): " << D2 * Lz(u_actual, i, j, k) << " u: "
-//                                  << u << std::endl;
-
-//                        std::cout << "i: " << k + j + i << "   " << *(u_actual + k + j + i) << std::endl;
-
-                        *(u_next + i + j + k) = u;
+                        *(u_next + index) = *(u_actual+index) +
+                                            dt * (f(i  * hx, j / n * hy, k /n/m* hz)
+                                                  + D0 * ((*(u_actual+index-1) - 2 * (*(u_actual+index)) +
+                                                          *(u_actual+index+1))/ (hx * hx)
+                                                  + D1 * ((*(u_actual+index-n) - 2 * (*(u_actual+index))) +
+                                                          *(u_actual+index+n)) / (hy * hy))
+                                                  + D2 * (((*(u_actual+index- n*m)) - 2 * (*(u_actual+index)) +
+                                                          (*(u_actual+index+ n*m))) / ((hz) * (hz))));
                     }
                 }
             }
