@@ -69,5 +69,16 @@ $U_{ijk}^{(n+1)} = U_{ijk}^n + Δt·(f_{ijk}^n + d_x·Lx_{ijk} U^n + d_y·Ly_{ij
 $U_{ijk}^{(n+1)} = g_{ijk}$, если $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 0$,
 где $x%y$ - операция взятия остатка от деления $x$ на $y$.
 
-Тройной цикл переписать чтобы он шел линейно к жи и
+# How to open results in ParaView
+1. Generate ```.vtk``` file [guide](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/CPP/ReadMe.md)
+2. Install [ParaView](https://www.paraview.org/)
+3. In ParaView open file ```numeric.vtk```
+4. Choose u: ![choose u](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_u.png)
+5. Choose clip and cut ![clip](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_clip.png)
+
+# Examples
+![example1](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/clip_perp_surface.png)
+
+![example2](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/clip_surface_edges.png)
+
  
