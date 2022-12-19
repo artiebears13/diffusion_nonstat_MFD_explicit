@@ -73,8 +73,12 @@ $U_{ijk}^{(n+1)} = g_{ijk}$, если $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 
 1. Generate ```.vtk``` file [guide](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/CPP/ReadMe.md)
 2. Install [ParaView](https://www.paraview.org/)
 3. In ParaView open file ```numeric.vtk```
-4. Choose u: ![choose u](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_u.png)
-5. Choose clip and cut ![clip](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_clip.png)
+4. Choose u:
+
+![choose u](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_u.png)
+5. Choose clip and cut 
+
+![clip](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_clip.png)
 
 # Examples
 ![example1](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/clip_perp_surface.png)
