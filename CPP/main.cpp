@@ -1,5 +1,6 @@
 #include <iostream>
-#include "mfd_solver.h"
+//#include "mfd_solver.h" //uncomment if compilate with cmakelists
+//#include "mfd_solver.cpp" //uncomment if compilate manually
 #include <chrono>
 
 int main() {

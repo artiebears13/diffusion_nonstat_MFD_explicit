@@ -5,11 +5,11 @@ Solver::Solver(int N, int M, int K, int T) {
     this->n = N;
     this->m = M;
     this->kk = K;
-    this->t = 111;
+    this->t = T;
     this->hx = 1. / (n - 1) * 1.0;
     this->hy = 1. / (m - 1) * 1.0;
     this->hz = 1. / (kk - 1) * 1.0;
-    this->dt = 0.009;
+    this->dt = 1. / T * 1.0;
 
     for (int i = 0; i < this->n; ++i) {
         for (int j = 0; j < this->m; ++j) {
@@ -47,7 +47,7 @@ void Solver::check_t() {
     } else if (answer == "n") {
         std::cout << "enter new t:";
         std::cin >> this->t;
-        this->dt = 1. / this->t;
+        this->dt = 1 / this->t;
         this->check_t();
     } else {
         std::cerr << "wrong input" << std::endl;
@@ -159,9 +159,9 @@ void Solver::get_next_u() {
             for (int k = 1; k < this->kk - 1; ++k) {
                 u = get_u(i, j, k) +
                     this->dt * (f(i, j, k)
-                          + D[0] * Lx(i, j, k)
-                          + D[1] * Ly(i, j, k)
-                          + D[2] * Lz(i, j, k));
+                                + D[0] * Lx(i, j, k)
+                                + D[1] * Ly(i, j, k)
+                                + D[2] * Lz(i, j, k));
 //                std::cout << "dt: " << this->dt << " get_u: " << get_u(i, j, k) << " " << " f(i, j, k): " << f(i, j, k) <<
 //                          " D[0] * Lx(i, j, k): " << +D[0] * Lx(i, j, k) << " D[1] * Ly(i, j, k): "
 //                          << D[1] * Ly(i, j, k)
@@ -192,5 +192,4 @@ double Solver::mistake() const {
     }
     return mist;
 }
-
 

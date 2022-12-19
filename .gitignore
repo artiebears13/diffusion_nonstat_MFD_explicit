@@ -3,7 +3,7 @@ __pycache__
 .idea
 .gitignore
 
-
+*.out
 build
 .idea
 cmake-build-debug

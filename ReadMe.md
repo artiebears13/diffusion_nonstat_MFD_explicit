@@ -60,7 +60,11 @@ $Lz_{ijk} U^n = \frac{ U_{ij(k-1)}^n - 2·U_{ijk}^n + U_{ij(k+1)}^n }{Δz^2}$
 $f_{ijk}^n = f(i·Δx, j·Δy, k·Δz, nΔt)$ и $g_{ijk} = g(i·Δx, j·Δy, k·Δz)$
 
 Тогда имеем следующую численную схему:
-$U_{ijk}^{(n+1)} = U_{ijk}^n + Δt·(f_{ijk}^n + d_x·Lx_{ijk} U^n + d_y·Ly_{ijk} U^n + d_z·Lz_{ijk} U^n), если 1 ⩽ i ⩽ Nx-2, 1 ⩽ j ⩽ Ny-2, 1 ⩽ k ⩽ Nz-2$
+$U_{ijk}^{(n+1)} = U_{ijk}^n + Δt·(f_{ijk}^n + d_x·Lx_{ijk} U^n + d_y·Ly_{ijk} U^n + d_z·Lz_{ijk} U^n), 
+
+если
+
+1 ⩽ i ⩽ Nx-2, 1 ⩽ j ⩽ Ny-2, 1 ⩽ k ⩽ Nz-2$
 
 $U_{ijk}^{(n+1)} = g_{ijk}$, если $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 0$,
 где $x%y$ - операция взятия остатка от деления $x$ на $y$.
