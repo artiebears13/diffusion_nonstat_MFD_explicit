@@ -76,7 +76,8 @@ $U_{ijk}^{(n+1)} = g_{ijk}$, если $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 
 4. Choose u:
 
 ![choose u](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_u.png)
-5. Choose clip and cut 
+
+6. Choose clip and cut 
 
 ![clip](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/examples/choose_clip.png)
 
