@@ -9,7 +9,8 @@ Solver::Solver(int N, int M, int K, int T) {
     this->hx = 1. / (n - 1) * 1.0;
     this->hy = 1. / (m - 1) * 1.0;
     this->hz = 1. / (kk - 1) * 1.0;
-    this->dt = 0.009;
+    this->dt = 0.000117302
+            ;
 
     for (int i = 0; i < this->n; ++i) {
         for (int j = 0; j < this->m; ++j) {

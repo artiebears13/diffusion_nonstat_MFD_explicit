@@ -1,9 +1,10 @@
 #include <iostream>
-#include "mfd_solver.h"
+
+#include "mfd_solver.cpp"
 #include <chrono>
 
 int main() {
-    Solver a(11, 11, 11, 1650);
+    Solver a(122, 62, 22, 1650);
 //    a.set_value(1,1,1,10.);
 //    a.swap();
 //    a.swap();

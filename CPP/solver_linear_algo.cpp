@@ -108,11 +108,11 @@ int main() {
 //                    else if (k == 0) { set_u(u_next, i, j, k, 0.); }
 //                    else if (k == kk - 1) { set_u(u_next, i, j, k, 0.); }
 //                    else {
-                        u = get_u(u_actual, i, j, k) +
-                            dt * (f(i * hx, j * hy, k * hz)
-                                  + D0 * Lx(u_actual, i, j, k)
-                                  + D1 * Ly(u_actual, i, j, k)
-                                  + D2 * Lz(u_actual, i, j, k));
+                    u = get_u(u_actual, i, j, k) +
+                        dt * (f(i * hx, j * hy, k * hz)
+                              + D0 * Lx(u_actual, i, j, k)
+                              + D1 * Ly(u_actual, i, j, k)
+                              + D2 * Lz(u_actual, i, j, k));
 //                    std::cout << "dt: " << dt << " get_u: " << get_u(u_actual, i, j, k) << " " << " f(i, j, k): "
 //                              << f(i * hx, j * hy, k * hz) <<
 //                              " D0 * Lx(i, j, k): " << D0 * Lx(u_actual, i, j, k) << " D1 * Ly(i, j, k): "
@@ -122,7 +122,7 @@ int main() {
 
 //                        std::cout<<"i: "<< k * n * m + j * n + i <<"   "<< *(u_actual+k * n * m + j * n + i)<<"   " << get_u(u_actual, i,j,k)<<std::endl;
 
-                        set_u(u_next, i, j, k, u);
+                    set_u(u_next, i, j, k, u);
 //                    }
                 }
             }
