@@ -1,14 +1,14 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
-#include "to_vtk.hpp"   //<----uncomment to build .vtk
+//#include "to_vtk.hpp"   //<----uncomment to build .vtk
 
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 //#define f(x, y, z) ((D0+D1+D2)*(M_PI*M_PI*sin(M_PI*x))* sin(M_PI * y) * sin(M_PI * z))
 
-const unsigned Nx=122;  //<---your value here
-const unsigned Ny=62;  //<---your value here
-const unsigned Nz=22;  //<---your value here
+const unsigned Nx=12;  //<---your value here
+const unsigned Ny=10;  //<---your value here
+const unsigned Nz=10;  //<---your value here
 const unsigned n =Nx;
 const unsigned m =Ny;
 const unsigned kk= Nz;
@@ -129,7 +129,7 @@ int main() {
         }
         swap(u_actual, u_next);
     }
-    write_to_file(u_actual,n,m,kk);      //<----uncomment to build .vtk
+//    write_to_file(u_actual,n,m,kk);      //<----uncomment to build .vtk
     double time = (double) (clock() - tStart) / CLOCKS_PER_SEC;
     std::cout << "time: " << time << std::endl;
     get_mist(u_actual);
