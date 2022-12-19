@@ -3,4 +3,4 @@ project(diffusion_mfd_solver)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(diffusion_mfd_solver main_mpi.cpp to_vtk.hpp)
+add_executable(diffusion_mfd_solver solver_linear_algo.cpp)

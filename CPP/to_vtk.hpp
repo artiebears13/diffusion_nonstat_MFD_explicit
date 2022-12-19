@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cstring>
 
-#define file_name "out.txt"
+#define file_name "../out.txt"
 
 void Count_XYZ(int n, int* arr, int NX, int NY){
 

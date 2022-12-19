@@ -1,10 +1,10 @@
 #include <iostream>
-
-#include "mfd_solver.cpp"
+//#include "mfd_solver.h" //uncomment if compilate with cmakelists
+//#include "mfd_solver.cpp" //uncomment if compilate manually
 #include <chrono>
 
 int main() {
-    Solver a(122, 62, 22, 1650);
+    Solver a(11, 11, 11, 1650);
 //    a.set_value(1,1,1,10.);
 //    a.swap();
 //    a.swap();
