@@ -7,9 +7,9 @@
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 
 
-const unsigned Nx = 12;
-const unsigned Ny = 12;
-const unsigned Nz = 10;
+const unsigned Nx = 122;
+const unsigned Ny = 62;
+const unsigned Nz = 22;
 const unsigned npx = 2;
 const unsigned npy = 2;
 const unsigned n = (Nx - 2) / npx + 2;
@@ -67,17 +67,18 @@ inline void get_mist(double *&u_actual, int id,int row, int col) {
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
             for (int i = 1; i < n - 1; ++i) {
-//                if (id==3){
-//                    std::cout << "id: " << id <<" row: " <<row <<" col:" << col <<" global i: " << (col * (n - 2) + i) << " local i: " << i
-//                              << " global j: " << (row * (m - 2) + j) << " local j: " << j  << " k: " << k
-//                              << " VALUE: " << get_u(u_actual, i, j, k)
-//                              << " and " << get_analytic_u((col * (n - 2) + i) * hx, (row * (m - 2) + j) * hy, k * hz)
-//                              << std::endl;
-//                }
+
                 if (std::fabs(get_u(u_actual, i, j, k) - get_analytic_u((col * (n-2) + i) * hx, (row * (m-2) + j) * hy, k * hz)) >
                     mist) {
                     mist = std::fabs(
                             get_u(u_actual, i, j, k) - get_analytic_u((col * (n-2) + i) * hx, (row * (m-2) + j) * hy, k * hz));
+                    //                 if (id==3){
+                    //        std::cout << "id: " << id <<" row: " <<row <<" col:" << col <<" global i: " << (col * (n - 2) + i) << " local i: " << i
+                    //                  << " global j: " << (row * (m - 2) + j) << " local j: " << j  << " k: " << k
+                    //                  << " VALUE: " << get_u(u_actual, i, j, k)
+                    //                  << " and " << get_analytic_u((col * (n - 2) + i) * hx, (row * (m - 2) + j) * hy, k * hz)
+                    //                  << std::endl;
+                    //    }
                 }
             }
         }
@@ -85,10 +86,10 @@ inline void get_mist(double *&u_actual, int id,int row, int col) {
     double mistake;
     MPI_Reduce(&mist,&mistake,1,MPI_DOUBLE, MPI_MAX,0,MPI_COMM_WORLD);
 
-//    if (id==0){
+    if (id==0){
         std::cout << "id: " << id << " MIST: " << mistake << std::endl;
         std::cout << "dt: " << dt << std::endl;
-//    }
+    }
 }
 
 
@@ -122,7 +123,7 @@ inline void pack_down(double *&buffer, double *&u_actual) {  //i=1
 inline void pack_left(double *&buffer, double *&u_actual) {  //i=1
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
-            *(buffer + k * Ny + j) = get_u(u_actual, 1, j, k);
+            *(buffer + k * m + j) = get_u(u_actual, 1, j, k);
         }
     }
 }
@@ -131,7 +132,7 @@ inline void pack_left(double *&buffer, double *&u_actual) {  //i=1
 inline void pack_right(double *&buffer, double *&u_actual) {  //i=n-2
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
-            *(buffer + k * Ny + j) = get_u(u_actual, n - 2, j, k);
+            *(buffer + k * m + j) = get_u(u_actual, n - 2, j, k);
         }
     }
 }
@@ -155,7 +156,7 @@ inline void unpack_down(double *&buffer, double *&u_actual) {  //i=n-2
 inline void unpack_left(double *&buffer, double *&u_actual) {  //i=n-2
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
-            set_u(u_actual, 0, j, k, *(buffer + k * Ny + j));
+            set_u(u_actual, 0, j, k, *(buffer + k * m + j));
         }
     }
 }
@@ -163,7 +164,7 @@ inline void unpack_left(double *&buffer, double *&u_actual) {  //i=n-2
 inline void unpack_right(double *&buffer, double *&u_actual) {  //i=n-2
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
-            set_u(u_actual, n - 1, j, k, *(buffer + k * Ny + j));
+            set_u(u_actual, n - 1, j, k, *(buffer + k * m + j));
         }
     }
 }
@@ -226,7 +227,7 @@ inline void chatting_horizontal(int &id, int &row, int &col,double* &u_actual, d
 }
 
 inline void chatting_vertical(int &id, int &row, int size,double* &u_actual, double* &buffer_send_up,double* &buffer_rec_up,
-                                double* &buffer_send_down,double* &buffer_rec_down, MPI_Status status){
+                              double* &buffer_send_down,double* &buffer_rec_down, MPI_Status status){
 
     if (row == 0) {
 
@@ -300,16 +301,16 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
     double *buffer_rec_right = &buf_rec_right[0];
 
     double buf_send_down[n * kk];
-    double *buffer_send_down = &buf_send_left[0];
+    double *buffer_send_down = &buf_send_down[0];
 
     double buf_send_up[n * kk];
-    double *buffer_send_up = &buf_send_right[0];
+    double *buffer_send_up = &buf_send_up[0];
 
     double buf_rec_down[n * kk];
-    double *buffer_rec_down = &buf_rec_left[0];
+    double *buffer_rec_down = &buf_rec_down[0];
 
     double buf_rec_up[n * kk];
-    double *buffer_rec_up = &buf_rec_right[0];
+    double *buffer_rec_up = &buf_rec_up[0];
 
 
 

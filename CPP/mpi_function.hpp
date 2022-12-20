@@ -7,9 +7,9 @@
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 
 
-const unsigned Nx = 122;
-const unsigned Ny = 62;
-const unsigned Nz = 22;
+const unsigned Nx = 12;
+const unsigned Ny = 12;
+const unsigned Nz = 10;
 const unsigned npx = 4;
 const unsigned npy = 1;
 const unsigned n = (Nx - 2) / npx + 2;
@@ -205,7 +205,7 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
         }
 
         for (unsigned k = 1; k < kk - 1; ++k) {
-                for (unsigned j = 1; j < m - 1; ++j) {
+            for (unsigned j = 1; j < m - 1; ++j) {
                 for (unsigned i = 1; i < n-1; ++i) {
                     u = get_u(u_actual, i, j, k) +
                         dt * (f((id * (n-2) + i) * hx, j * hy, k * hz)
@@ -222,5 +222,4 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
     if (id==0) {
         std::cout << "time " << t  << std::endl;
     }
-    get_mist(u_actual,id);
 }

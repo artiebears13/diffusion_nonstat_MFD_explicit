@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
 
     solver(u_actual,u_next,id,size);
-
+//    get_mist(u_actual,id);
 
     MPI_Finalize();
     return 0;
