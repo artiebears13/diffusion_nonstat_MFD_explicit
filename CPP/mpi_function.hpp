@@ -7,9 +7,9 @@
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 
 
-const unsigned Nx = 12;
-const unsigned Ny = 12;
-const unsigned Nz = 10;
+const unsigned Nx = 122;
+const unsigned Ny = 62;
+const unsigned Nz = 22;
 const unsigned npx = 4;
 const unsigned npy = 1;
 const unsigned n = (Nx - 2) / npx + 2;
