@@ -68,11 +68,14 @@ inline void get_mist(double *&u_actual, int id) {
     for (int k = 0; k < kk; ++k) {
         for (int j = 0; j < m; ++j) {
             for (int i = 1; i < n - 1; ++i) {
-//                std::cout<<"id: "<<id<<" x: "<<(id*(n-1)+i)<<" VALUE: "<<get_u(u_actual, i, j, k)<<" and " <<get_analytic_u((id*(n-1)+i) * hx, j * hy, k * hz)<<std::endl;
-                if (std::fabs(get_u(u_actual, i, j, k) - get_analytic_u((id * (n - 1) + i) * hx, j * hy, k * hz)) >
+                if (id==1){
+                    std::cout << "id: " << id << " global i: " << (id * (n - 2) + i) <<" local i: "<< i <<" j: "<<j*hy<<" k: "<<k*hz<<" VALUE: " << get_u(u_actual, i, j, k)
+                              << " and " << get_analytic_u((id * (n - 2) + i) * hx, j * hy, k * hz) << std::endl;
+                }
+                if (std::fabs(get_u(u_actual, i, j, k) - get_analytic_u((id * (n-2) + i) * hx, j * hy, k * hz)) >
                     mist) {
                     mist = std::fabs(
-                            get_u(u_actual, i, j, k) - get_analytic_u((id * (n - 1) + i) * hx, j * hy, k * hz));
+                            get_u(u_actual, i, j, k) - get_analytic_u((id * (n-2) + i) * hx, j * hy, k * hz));
 
 
                 }
@@ -153,7 +156,7 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
     int counter = 0;
     for (int l = 1; l * dt <= 1; l++) {
 
-        std::cout << "==================================================================" << std::endl;
+//        std::cout << "==================================================================" << std::endl;
         MPI_Barrier(MPI_COMM_WORLD);
         if (id == 0) {
 
@@ -232,10 +235,10 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
         MPI_Barrier(MPI_COMM_WORLD);
 
         for (unsigned k = 1; k < kk - 1; ++k) {
-            for (unsigned j = 1; j < m - 1; ++j) {
-                for (unsigned i = 1; i < n; ++i) {
+                for (unsigned j = 1; j < m - 1; ++j) {
+                for (unsigned i = 1; i < n-1; ++i) {
                     u = get_u(u_actual, i, j, k) +
-                        dt * (f((id * (n - 1) + i) * hx, j * hy, k * hz)
+                        dt * (f((id * (n-2) + i) * hx, j * hy, k * hz)
                               + D0 * Lx(u_actual, i, j, k)
                               + D1 * Ly(u_actual, i, j, k)
                               + D2 * Lz(u_actual, i, j, k));
