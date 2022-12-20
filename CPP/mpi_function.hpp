@@ -222,4 +222,5 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
     if (id==0) {
         std::cout << "time " << t  << std::endl;
     }
+    get_mist(u_actual,id);
 }
