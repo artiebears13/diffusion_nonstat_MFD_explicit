@@ -6,9 +6,9 @@
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 //#define f(x, y, z) ((D0+D1+D2)*(M_PI*M_PI*sin(M_PI*x))* sin(M_PI * y) * sin(M_PI * z))
 
-const unsigned Nx=14;  //<---your value here
-const unsigned Ny=10;  //<---your value here
-const unsigned Nz=10;  //<---your value here
+const unsigned Nx=122;  //<---your value here
+const unsigned Ny=62;  //<---your value here
+const unsigned Nz=22;  //<---your value here
 const unsigned n =Nx;
 const unsigned m =Ny;
 const unsigned kk= Nz;
