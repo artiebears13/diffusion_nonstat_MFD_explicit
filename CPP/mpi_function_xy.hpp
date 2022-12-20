@@ -10,8 +10,8 @@
 const unsigned Nx = 122;
 const unsigned Ny = 62;
 const unsigned Nz = 22;
-const unsigned npx = 2;
-const unsigned npy = 2;
+const unsigned npx = 4;   //<-- here
+const unsigned npy = 2;   //<--here
 const unsigned n = (Nx - 2) / npx + 2;
 const unsigned m = (Ny - 2) / npy + 2;
 const unsigned kk = Nz;
@@ -341,7 +341,7 @@ inline void solver(double *&u_actual, double *&u_next, int id, int size) {
     }
     t=MPI_Wtime()-t;
     if (id==0) {
-        std::cout << "time " << t  << std::endl;
+        std::cout<< "processors: "<< size << "| time " << t  <<"| npx: "<<npx<<"| npy: "<<npy << std::endl;
     }
-    get_mist(u_actual,id,row,col);
+//    get_mist(u_actual,id,row,col);
 }
