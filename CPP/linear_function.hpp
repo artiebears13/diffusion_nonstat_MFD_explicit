@@ -1,14 +1,15 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
-//#include "to_vtk.hpp"   //<----uncomment to build .vtk
+//#include <mpi.h>
+
 
 #define get_analytic_u(x, y, z) (sin(M_PI * x) * sin(M_PI * y) * sin(M_PI * z) *(1 - exp(-((D0 + D1 + D2) * M_PI*M_PI * 1))))
 //#define f(x, y, z) ((D0+D1+D2)*(M_PI*M_PI*sin(M_PI*x))* sin(M_PI * y) * sin(M_PI * z))
 
-const unsigned Nx=122;  //<---your value here
-const unsigned Ny=62;  //<---your value here
-const unsigned Nz=22;  //<---your value here
+const unsigned Nx=10;
+const unsigned Ny=10;
+const unsigned Nz=10;
 const unsigned n =Nx;
 const unsigned m =Ny;
 const unsigned kk= Nz;
@@ -76,26 +77,8 @@ inline void get_mist(double* &u_actual){
     std::cout << "dt: " << dt << std::endl;
 }
 
-int main() {
-
+inline void solver(double* &u_actual, double* &u_next){
     double u;
-    double u_act[len];
-    double u_n[len];
-
-    double *u_actual = &u_act[0];
-    double *u_next = &u_n[0];
-
-
-    for (int k = 0; k < kk; ++k) {
-        for (int j = 0; j < m; ++j) {
-            for (int i = 0; i < n; ++i) {
-                set_u(u_actual, i, j, k, 0.);
-                set_u(u_next, i, j, k, 0.);
-            }
-        }
-    }
-
-    clock_t tStart = clock();
     for (int l = 1; l * dt <= 1; l++) {
         for (unsigned k = 1; k < kk-1; ++k) {
             for (unsigned j = 1; j < m-1; ++j) {
@@ -129,10 +112,15 @@ int main() {
         }
         swap(u_actual, u_next);
     }
-//    write_to_file(u_actual,n,m,kk);      //<----uncomment to build .vtk
-    double time = (double) (clock() - tStart) / CLOCKS_PER_SEC;
-    std::cout << "time: " << time << std::endl;
-    get_mist(u_actual);
-    return 0;
 }
 
+inline void fill_boundary(double* &u_actual, double* &u_next){
+    for (int k = 0; k < kk; ++k) {
+        for (int j = 0; j < m; ++j) {
+            for (int i = 0; i < n; ++i) {
+                set_u(u_actual, i, j, k, 0.);
+                set_u(u_next, i, j, k, 0.);
+            }
+        }
+    }
+}
