@@ -34,3 +34,11 @@ and then run py script: ```python3 to_vtk.py```
 
 results saved to ```numeric.vtk``` and then you can open it for example with [ParaView](https://www.paraview.org/)
 
+# MPI RUN
+
+instructions to parallel algo:
+running:
+```mpic++ main_mpi.cpp -O2```
+
+```mpi_function.hpp``` - paralleling in one directions - x axis
+```mpi_function_xy.hpp```  - paralleling in two directions - x and y

@@ -29,7 +29,7 @@ inline double f(double x, double y, double z) {
     return ((D0 + D1 + D2) * (M_PI * M_PI * sin(M_PI * x)) * sin(M_PI * y) * sin(M_PI * z));
 }
 
-
+//reindexing
 inline double get_u(double *const &u, int i, int j, int k) {
     return *(u + k * n * m + j * n + i);
 }
@@ -104,6 +104,12 @@ inline void fill_boundary(double *&u_actual, double *&u_next) {
     }
 }
 
+/*
+ The program splits the grid into several parts and counts them in parallel.
+ At each step, values are exchanged at the borders of the regions.
+ First, values are packing and send. then receiving and unpacking.
+ */
+
 inline void pack_up(double *&buffer, double *&u_actual) {  //i=1
     for (int k = 0; k < kk; ++k) {
         for (int i = 0; i < n; ++i) {
@@ -169,6 +175,7 @@ inline void unpack_right(double *&buffer, double *&u_actual) {  //i=n-2
     }
 }
 
+//send values to left and right regions
 inline void chatting_horizontal(int &id, int &row, int &col,double* &u_actual, double* &buffer_send_right,double* &buffer_rec_right,
                                 double* &buffer_send_left,double* &buffer_rec_left, MPI_Status status){
     if (col == 0) {
@@ -226,6 +233,7 @@ inline void chatting_horizontal(int &id, int &row, int &col,double* &u_actual, d
 
 }
 
+//send values to higher and lower regions
 inline void chatting_vertical(int &id, int &row, int size,double* &u_actual, double* &buffer_send_up,double* &buffer_rec_up,
                               double* &buffer_send_down,double* &buffer_rec_down, MPI_Status status){
 
