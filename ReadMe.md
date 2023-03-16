@@ -1,15 +1,16 @@
-# Формулировка задачи
-Будем заниматься решением нестационарного уравнения диффузии с переменной
+# Task Formulation
+
+We will deal with the solution of the non-stationary diffusion equation with the variable
 $U = U(x, y, z, t):$
-$∂U/∂t - div (D · grad U) = f(x, y, z, t), (x,y,z)$ принадлежит $Ω = [0; 1]^3$, t на отрезке $[0, T]$
+$∂U/∂t - div (D · grad U) = f(x, y, z, t), (x,y,z)$ belongs $Ω = [0; 1]^3$, t on the  $[0, T]$
 
-$U(x, y, z, t) = g(x, y, z)$ на границе области $∂Ω$
+$U(x, y, z, t) = g(x, y, z)$ on the edge of the region $∂Ω$
 
-$U(x, y, z, 0) = 0$ в начальный момент времени
+$U(x, y, z, 0) = 0$ at the initial time
 
-Конечный момент времени зададим как $T = 1$
+We define the final moment of time as $T = 1$
 
-В задаче будем использовать диагональный тензор $D:$
+In the problem, we will use the diagonal tensor $D:$
 
 ```math
 D=\begin{pmatrix}
@@ -21,33 +22,33 @@ d_x & 0 & 0 \\
 
 где $d_x = 0.25, d_y = 0.15, d_z = 0.1$
 
-Также зададим
+Also set:
 
 $g(x, y, z) = 0$
 
 $f(x, y, z) = (d_x+d_y+d_z)·π²·sin(πx)sin(πy)sin(πz)$	 
-У решаемого уравнения существует аналитическое решение:
+This equation has analytic solution:
 $U_analityc = sin(πx)sin(πy)sin(πz)·(1 - exp(-(d_x+d_y+d_z)·π²·t))$
 
-# Дискретизация
-Построим параллелепипедную дискретизацию нашей области.
+# Sampling
+Building a parallelepiped discretization of our region.
 
-А именно, выберем числа $Nx, Ny, Nz > 1$ - количество узлов, которые будут укладываться вдоль оси $Ox, Oy и Oz$ соотвественно.
-Тогда определим шаг сетки $Δx = \frac{1}{(Nx-1)}, Δy = \frac{1}{(Ny-1)}, Δz = \frac{1}{(Nz-1)}.$
-Также определим шаг по времени $Δt$.
-Обозначим через $V_{ijk}$ узел сетки с координатами $x_i = i·Δx, y_j = j·Δy, z_k = k·Δz.$
+Set $Nx, Ny, Nz > 1$ - the number of nodes that will fit along the axis $Ox, Oy and Oz$, respectively.
+Then we define the grid step $Δx = \frac{1}{(Nx-1)}, Δy = \frac{1}{(Ny-1)}, Δz = \frac{1}{(Nz-1)}. $
+Also, define the time step $Δt$.
+Define $V_{ijk}$ node of grid with coordinates $x_i = i·Δx, y_j = j·Δy, z_k = k·Δz.$
 
-Будем описывать дискретную функцию $[U]^h$ в момент времени $nΔt$ её степенями свободы, которые расположим в узлах сетки и степень свободы в узле V_ijk обозначим как
+We will describe the discrete function $[U]^h$ at the time $nΔt$ by its degrees of freedom, which we will place at the nodes of the grid, and the degree of freedom at the node V_ijk will be denoted as
 
 $U_{ijk}^n, 0 ⩽ i ⩽ Nx-1, 0 ⩽ j ⩽ Ny-1, 0 ⩽ k ⩽ Nz-1.$
 
-Дискретизуем наше уравнение по пространству методом конечных разностей, а по времени явной схемой Эйлера.
+We discretize our equation in space by the finite difference method, and in time by the explicit Euler scheme.
 
-Заметим, что для такой дискретизации шаг по времени должен удовлетворять условию Куранта:
+Note that for such a discretization, the time step must satisfy the Courant condition:
 
 $Δt < \frac{0.5}{ \frac{d_x } {(Δx)^2} + \frac{d_y}{(Δy)^2} + \frac{d_z}{(Δz)^2} }$
 
-Введём дискретные операторы вторых пространственных производные:
+Introduce discrete operators of the second spatial derivatives:
 
 $Lx_{ijk} U^n = \frac{ U_{(i-1)jk}^n - 2·U_{ijk}^n + U_{(i+1)jk}^n }{Δx^2}$
 
@@ -55,19 +56,21 @@ $Ly_{ijk} U^n = \frac{ U_{i(j-1)k}^n - 2·U_{ijk}^n + U_{i(j+1)k}^n }{Δy)^2}$
 
 $Lz_{ijk} U^n = \frac{ U_{ij(k-1)}^n - 2·U_{ijk}^n + U_{ij(k+1)}^n }{Δz^2}$
 
-Также пусть
+Also, let
 
 $f_{ijk}^n = f(i·Δx, j·Δy, k·Δz, nΔt)$ и $g_{ijk} = g(i·Δx, j·Δy, k·Δz)$
 
-Тогда имеем следующую численную схему:
+Then we have the following numerical scheme:
 $U_{ijk}^{(n+1)} = U_{ijk}^n + Δt·(f_{ijk}^n + d_x·Lx_{ijk} U^n + d_y·Ly_{ijk} U^n + d_z·Lz_{ijk} U^n), 
 
-если
+
+if
+
 
 1 ⩽ i ⩽ Nx-2, 1 ⩽ j ⩽ Ny-2, 1 ⩽ k ⩽ Nz-2$
 
-$U_{ijk}^{(n+1)} = g_{ijk}$, если $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 0$,
-где $x%y$ - операция взятия остатка от деления $x$ на $y$.
+$U_{ijk}^{(n+1)} = g_{ijk}$, if $(i%(Nx-1)) · (j%(Ny-1)) · (k%(Nz-1)) = 0$,
+где $x%y$ - operation of taking the remainder of a division $x$ на $y$.
 
 # How to open results in ParaView
 1. Generate ```.vtk``` file [guide](https://github.com/artiebears13/diffusion_nonstat_MFD_explicit/blob/main/CPP/ReadMe.md)
